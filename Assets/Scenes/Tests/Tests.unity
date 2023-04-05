@@ -1999,7 +1999,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136064592}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1804299638}
@@ -2061,6 +2061,10 @@ PrefabInstance:
       propertyPath: _audioSource
       value: 
       objectReference: {fileID: 696486531}
+    - target: {fileID: 1802705899434120168, guid: aaf058fa3ecd2df4d96089f124d55e5b, type: 3}
+      propertyPath: _bulletPrefab
+      value: 
+      objectReference: {fileID: 6738783707962048431, guid: 586df30c93bad7149820bd296671efe4, type: 3}
     - target: {fileID: 1802705899434120170, guid: aaf058fa3ecd2df4d96089f124d55e5b, type: 3}
       propertyPath: m_Name
       value: ScouterShotgun
@@ -2142,6 +2146,10 @@ PrefabInstance:
       propertyPath: _audioSource
       value: 
       objectReference: {fileID: 126004948}
+    - target: {fileID: 2361045240309171338, guid: b852f971576c1064fbe8d784ffce93ae, type: 3}
+      propertyPath: _bulletPrefab
+      value: 
+      objectReference: {fileID: 6738783707962048431, guid: e90f12827c38d1b41b857b9d35cd7930, type: 3}
     - target: {fileID: 2361045240309171339, guid: b852f971576c1064fbe8d784ffce93ae, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -2255,6 +2263,10 @@ PrefabInstance:
       propertyPath: _audioSource
       value: 
       objectReference: {fileID: 1783940376}
+    - target: {fileID: 3422997957365553403, guid: 006aba8f83382b74592dc7c0685f50e3, type: 3}
+      propertyPath: _bulletPrefab
+      value: 
+      objectReference: {fileID: 6738783707962048431, guid: 33651eb498f961e4ca444684556f8af0, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 006aba8f83382b74592dc7c0685f50e3, type: 3}
 --- !u!1001 &4002763392802017594
@@ -2341,6 +2353,10 @@ PrefabInstance:
       propertyPath: _audioSource
       value: 
       objectReference: {fileID: 7495872762540001935}
+    - target: {fileID: 3273914326618783005, guid: 67e93b151c5cb9b4bb42aa9868a37d88, type: 3}
+      propertyPath: _bulletPrefab
+      value: 
+      objectReference: {fileID: 6738783707962048431, guid: 11251c808eb74324faae522b40839d44, type: 3}
     - target: {fileID: 3273914326618783006, guid: 67e93b151c5cb9b4bb42aa9868a37d88, type: 3}
       propertyPath: m_RootOrder
       value: 4

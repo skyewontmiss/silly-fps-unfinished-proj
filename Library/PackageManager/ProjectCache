@@ -5,15 +5,15 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638158944140948511
-    m_Hash: 1601016538
+      ticks: 638162958742449676
+    m_Hash: 1946835664
   m_LockFileStatus:
     m_FilePath: C:/Users/Kaylerr/Desktop/Boxfight - Take 2/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638161945532445381
+      ticks: 638162959200882562
     m_Hash: 2302577842
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
