@@ -26,6 +26,22 @@ namespace Boxfight2.Client.Player
             Cursor.lockState = CursorLockMode.Locked;
         }
 
+        public Vector3 GetLookDirection()
+        {
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+            float rayDistance;
+
+            if (groundPlane.Raycast(ray, out rayDistance))
+            {
+                Vector3 point = ray.GetPoint(rayDistance);
+                return (point - transform.position).normalized;
+            }
+
+            return Vector3.zero;
+        }
+
+
         void FixedUpdate()
         {
             float moveHorizontal = Input.GetAxis("Horizontal");
@@ -46,7 +62,7 @@ namespace Boxfight2.Client.Player
 
         void Update()
         {
-            isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, whatIsGround);
+            isGrounded = UnityEngine.Physics.CheckSphere(groundCheck.position, groundCheckRadius, whatIsGround);
 
             if (isGrounded && Input.GetButtonDown("Jump"))
             {

@@ -9,6 +9,8 @@ namespace Boxfight2.Client.Weapons
         [SerializeField] private float lifeTime = 2f;
         [SerializeField] private float damage = 1f;
 
+[HideInInspector] public GameObject player;
+
         private void Start()
         {
             Destroy(gameObject, lifeTime);
@@ -26,6 +28,8 @@ namespace Boxfight2.Client.Weapons
 
         private void OnTriggerEnter(Collider other)
         {
+if(other.gameObject == player)
+return;
             Debug.Log("touched gameobject " + other.name);
 
             var health = other.gameObject.GetComponent<Health>();
@@ -39,7 +43,9 @@ namespace Boxfight2.Client.Weapons
 
         private void OnCollisionEnter(Collision other)
         {
-            Debug.Log("touched gameobject " + other.gameObject.name);
+if(other.gameObject == player)
+return;
+            Debug.Log("touched gameobject x " + other.gameObject.name);
             var health = other.gameObject.GetComponent<Health>();
             if (health != null)
             {
