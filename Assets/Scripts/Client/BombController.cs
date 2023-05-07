@@ -46,11 +46,14 @@ namespace Boxfight2.Client.Weapons
             explosion.name = "Explosion FX";
 
             Destroy(explosion, 2f);
+	Damage();
             if (GetComponent<Rigidbody>() != null)
                 Destroy(GetComponent<Rigidbody>());
 
             transform.parent = initialParent;
             transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.Euler(Vector3.zero);
+            transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
             behavior.enabled = true;
             if (amountOfThrows > 0)
                 CanBeHeld = true;
@@ -59,6 +62,21 @@ namespace Boxfight2.Client.Weapons
             inv.HideBomb();
         }
 
+void Damage()
+{
+Collider[] hits = UnityEngine.Physics.OverlapSphere(transform.position, blastRadius);
+
+for (int i = 0; i < hits.Length; i++)
+{
+Rigidbody rb = hits[i].GetComponent<Rigidbody>();
+
+if(!rb)
+continue;
+
+Vector3 dir = (hits[i].transform.position - transform.position).normalized;
+rb.AddForce(dir * explosionForce, ForceMode.Impulse);
+}
+}
 
         public void ThrowBomb(Vector3 lookDirection)
         {

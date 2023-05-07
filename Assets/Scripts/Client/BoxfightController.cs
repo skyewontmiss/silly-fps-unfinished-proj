@@ -1,85 +1,137 @@
 ﻿using UnityEngine;
 using Boxfight2.Client.Weapons;
+using Boxfight2.Server;
+using Fusion;
 
 namespace Boxfight2.Client.Player
 {
-    public class BoxfightController : MonoBehaviour
+    public class BoxfightController : NetworkBehaviour
     {
-        [SerializeField] private float moveSpeed = 5f;
-        [SerializeField] private float jumpForce = 5f;
-        [SerializeField] private float sprintMultiplier = 2f;
-        [SerializeField] private LayerMask whatIsGround;
-        [SerializeField] private Transform groundCheck;
-        [SerializeField] private float groundCheckRadius = 0.2f;
-        [SerializeField] private float mouseSensitivity = 100f;
-        [SerializeField] Camera camera;
-        private Rigidbody rb;
-        private bool isGrounded = false;
-        private bool isSprinting = false;
+        /*      #region Legacy Controller 
+              [Header("Multiplayer")]
+              public bool IsInMultiplayer;
 
-        private float xRotation = 0f;
-        private GunController gun;
+              [SerializeField] private float moveSpeed = 5f;
+              [SerializeField] private float jumpForce = 5f;
+              [SerializeField] private float sprintMultiplier = 2f;
+              [SerializeField] private LayerMask whatIsGround;
+              [SerializeField] private Transform groundCheck;
+              [SerializeField] private float groundCheckRadius = 0.2f;
+              [SerializeField] private float mouseSensitivity = 100f;
+              [SerializeField] Camera camera;
+              private Rigidbody rb;
+              private bool isGrounded = false;
+              private bool isSprinting = false;
 
-        void Start()
-        {
-            rb = GetComponent<Rigidbody>();
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+              private float xRotation = 0f;
+              private GunController gun;
+              private NetworkObject netObject;
+              void Start()
+              {
+                  rb = GetComponent<Rigidbody>();
+                  Cursor.lockState = CursorLockMode.Locked;
+                  if (isInMultiplayer)
+                      netObject = GetComponent<NetworkObject>();
+              }
 
-        public Vector3 GetLookDirection()
-        {
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-            float rayDistance;
+              public Vector3 GetLookDirection()
+              {
+                  Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+                  Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+                  float rayDistance;
 
-            if (groundPlane.Raycast(ray, out rayDistance))
-            {
-                Vector3 point = ray.GetPoint(rayDistance);
-                return (point - transform.position).normalized;
-            }
+                  if (groundPlane.Raycast(ray, out rayDistance))
+                  {
+                      Vector3 point = ray.GetPoint(rayDistance);
+                      return (point - transform.position).normalized;
+                  }
 
-            return Vector3.zero;
-        }
+                  return Vector3.zero;
+              }
 
 
-        void FixedUpdate()
-        {
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
-            float sprintMultiplier = isSprinting ? this.sprintMultiplier : 1f;
-            Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical) * moveSpeed * sprintMultiplier * Time.fixedDeltaTime;
-            rb.MovePosition(transform.position + transform.TransformDirection(movement));
+              void FixedUpdate()
+              {
+                  if (!IsInMultiplayer)
+                      return;
 
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.fixedDeltaTime;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.fixedDeltaTime;
+                  float moveHorizontal = Input.GetAxis("Horizontal");
+                  float moveVertical = Input.GetAxis("Vertical");
+                  float sprintMultiplier = isSprinting ? this.sprintMultiplier : 1f;
+                  Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical) * moveSpeed * sprintMultiplier * Time.fixedDeltaTime;
+                  rb.MovePosition(transform.position + transform.TransformDirection(movement));
 
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+                  float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.fixedDeltaTime;
+                  float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.fixedDeltaTime;
 
-            transform.Rotate(Vector3.up * mouseX);
-            camera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        }
+                  xRotation -= mouseY;
+                  xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        void Update()
-        {
-            isGrounded = UnityEngine.Physics.CheckSphere(groundCheck.position, groundCheckRadius, whatIsGround);
+                  transform.Rotate(Vector3.up * mouseX);
+                  camera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+              }
 
-            if (isGrounded && Input.GetButtonDown("Jump"))
-            {
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            }
+              void Update()
+              {
+                  if (!IsInMultiplayer)
+                      return;
 
-            isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+                  isGrounded = UnityEngine.Physics.CheckSphere(groundCheck.position, groundCheckRadius, whatIsGround);
 
-        }
+                  if (isGrounded && Input.GetButtonDown("Jump"))
+                  {
+                      rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                  }
 
-        #region GunManagement
+                  isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
+              }
+
+              public override void FixedUpdateNetwork()
+              {
+
+                  isGrounded = UnityEngine.Physics.CheckSphere(groundCheck.position, groundCheckRadius, whatIsGround);
+
+                  if (isGrounded && Input.GetButtonDown("Jump"))
+                  {
+                      rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                  }
+
+                  isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+              }
+              #region GunManagement
+              public void UpdateGunController(GunController gunController)
+              {
+                  gun = gunController;
+              }
+
+              #endregion
+
+      #endregion
+
+                */
+
+        [Header("TransformController")]
+        [SerializeField] NetworkCharacterControllerPrototype characterProto;
+
         public void UpdateGunController(GunController gunController)
         {
-            gun = gunController;
+            //do nothing, just stop inventory from crying 
+
+            //gun = gunController;
         }
 
-        #endregion
+        public override void FixedUpdateNetwork()
+        {
+            if(GetInput(out NetworkInputData input))
+            {
+                Vector3 move = transform.forward * input.XYInput.y + transform.right * input.XYInput.x;
+                move.Normalize();
 
+                characterProto.Move(move);
+            }
+        }
     }
+
 }
+ 
